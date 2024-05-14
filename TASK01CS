@@ -1,0 +1,52 @@
+def caesar_cipher(text, shift, direction):
+    """
+    Encrypts or decrypts the given text using the Caesar Cipher algorithm.
+
+    :param text: The text to encrypt or decrypt
+    :param shift: The shift value
+    :param direction: 1 for encryption, -1 for decryption
+    :return: The encrypted or decrypted text
+    """
+    result = ""
+    for char in text:
+        if char.isalpha():
+            ascii_offset = 65 if char.isupper() else 97
+            result += chr((ord(char) - ascii_offset + shift * direction) % 26 + ascii_offset)
+        else:
+            result += char
+    return result
+
+def get_direction():
+    """
+    Asks the user for the direction (E or D) and returns 1 for encryption or -1 for decryption.
+    """
+    while True:
+        direction = input("Do you want to (E)ncrypt or (D)ecrypt?: ")
+        if direction.upper() == 'E':
+            return 1
+        elif direction.upper() == 'D':
+            return -1
+        else:
+            print("Invalid direction. Please enter E or D.")
+
+def get_shift():
+    """
+    Asks the user for the shift value and returns it as an integer.
+    """
+    while True:
+        try:
+            shift = int(input("Enter the shift value: "))
+            return shift
+        except ValueError:
+            print("Invalid shift value. Please enter an integer.")
+
+def main():
+    direction = get_direction()
+    text = input("Enter your message: ")
+    shift = get_shift()
+
+    result = caesar_cipher(text, shift, direction)
+    print(f"Result: {result}")
+
+if __name__ == "__main__":
+    main()
